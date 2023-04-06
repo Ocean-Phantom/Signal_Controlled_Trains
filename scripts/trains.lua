@@ -330,7 +330,7 @@ function on_train_depart(event)
 
     if train.Last_Station_Visited ~= nil and train.Last_Station_Visited.valid ~= false then
         update_train_cargo(train_id)
-        update_train_stop_signals(train.Last_Station_ID, train.Last_Station_Visited)
+        -- update_train_stop_signals(train.Last_Station_ID, train.Last_Station_Visited)
         local last_stop_signals = global.Train_Stops[train.Last_Station_ID].Signals
 
         local depot_signal = last_stop_signals.Virtual_Signals[DEPOT_SIGNAL]

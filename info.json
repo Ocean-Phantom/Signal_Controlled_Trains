@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "title": "Signal Controlled Trains",
   "author": "WristWatch/OceanPhantom",
-  "homepage": "",
+  "homepage": "https://github.com/Ocean-Phantom/Signal_Controlled_Trains",
   "description": "Send trains to stations receiving signals that match the train's cargo, or use signals to send a train to pickup cargo. Includes an option to automatically add refuelling stops to train schedules.",
   "factorio_version": "1.1",
   "dependencies": [
