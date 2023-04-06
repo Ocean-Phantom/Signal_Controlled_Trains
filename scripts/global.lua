@@ -1,0 +1,80 @@
+---@class Delivery - index by game.tick, adding for with non-collision
+---@field Delivery_ID (uint)
+---@field Surface_Index (uint)
+---@field Train_ID (uint) = LuaEntity.unit_number
+---@field Destination_Train_Stop_ID (uint) = LuaEntity.unit_number
+---@field Tick_Started (uint)
+---@field Tick_Ended (uint) = nil by default
+---@field Type (uint) - 1="standard", 2="pickup", or 3="refuel" only
+---@field Active (boolean) - true until train leaves requester station
+---@field On_Way (boolean) - true until train arrives at requester station
+---@field Cargo_In_Transit {
+    ---@field Cargo {},
+    ---@field Fluid_Cargo {}}
+
+---@class TrainStops - index by TrainStop.unit_number
+---@field Train_Stop (LuaEntity)
+---@field ID (uint)
+---@field Network_Demand (int) -default:0
+---@field Network_Refuel (int) -default:0
+---@field Network_Supply (int) -default:0
+---@field Tick_Last_Checked (uint)
+---@field Active_Deliveries {(Delivery)}
+---@field Trains_On_Way (uint) (only trains pathed via the mod)
+---@field Signals {
+    ---@field Item_Signals {},
+    ---@field Fluid_Signals {},
+    ---@field Virtual_Signals {} }
+---@field Cargo_In_Transit {
+    ---@field Cargo {},
+    ---@field Fluid_Cargo {}}
+---@field Imaginary_Cargo_In_Transit {
+    ---@field Cargo {},
+    ---@field Fluid_Cargo {}}
+
+---@class Trains index by Train.id
+---@field Train(LuaTrain)
+---@field ID (uint)
+---@field Last_Station_Visited (LuaEntity)
+---@field Last_Stop_Temp (boolean) - true if exists
+---@field Cargo {}
+---@field Fluid_Cargo {}
+---@field Has_Delivery (boolean) -default:false -delivery ongoing -true as long as it has not left a station requesting a delivery of its cargo and it still has cargo
+---@field Delivery_ID (uint)
+---@field Network_Supply (int) -default:0
+---@field Registered_For_Delivery(boolean) -default:false -for cases where train leaves a station but cannot find a matching requester
+---@field Exclusive_Delivery_Mode(boolean) -default:false=OR matching, true=AND matching
+---@field Tick_Last_Checked (uint)
+---@field Registered_For_Pickup (boolean)
+---@field Has_Pickup (boolean) -default false
+---@field Network_Pickup (int) -default: 0
+---@field Refueling (boolean) -default false
+---@field Registered_For_Refueling (boolean) -default false
+---@field Network_Refuel (int) -default: 0
+---@field Intended_Insert_Position (uint) or nil
+---@field Cargo_Capacity {item (int), fluid(int)}
+---@field Imaginary_Cargo {} - math jokes
+---@field Imaginary_Fluid_Cargo {} - these are actually signals for use in pickup mode
+
+---@class Surfaces
+---@field Surface (LuaSurface)
+---@field Train_Stops {TrainStop}
+---@field Supply_Stops {TrainStop} --stops receiving a depot signal
+---@field Demand_Stops {TrainStop} --stops receiving a demand signal
+---@field Refuel_Stops {TrainStop} --stops with the refuel signal in their name. NOT stops receiving a fuel signal!
+---@field Demand_Stops_by_Signal {item={(boolean)}, fluid={(boolean)}} -- stops indexed by ID for each signal they receive
+---@field Supply_Stops_by_Signal {item={(boolean)}, fluid={(boolean)}} -- stops indexed by ID for each signal they receive
+---@field Deliveries {Delivery}
+
+---@class Poll
+---@field Last_Train_Stop (uint)
+---@field Last_Train (uint)
+---@field Tick (uint) - init to 1, then get advanced once every time a poll occurs
+
+---@class Settings
+---@field delivery_timeout_ticks (int) -converted from the settings to cache the * 60 operation
+---@field delivery_removal_ticks (int) -see above
+---@field Trains_per_Poll (int)
+---@field Train_Stops_per_Poll (int)
+
+---@field GamePrototypes = {item = {}, fluid = {}}

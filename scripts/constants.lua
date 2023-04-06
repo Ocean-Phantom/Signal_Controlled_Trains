@@ -1,0 +1,6 @@
+FUEL_SIGNAL = "refuel-signal"
+DEPOT_SIGNAL = "depot-signal"
+SKIP_SIGNAL = "skip-signal"
+DOT_SIGNAL = "signal-dot"
+INFO_SIGNAL = "signal-info"
+CHECK_SIGNAL = "signal-check"
