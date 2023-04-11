@@ -4,7 +4,7 @@ Send trains to stations receiving signals that match the train's cargo, or use s
 
 ## This mod does not work with disabled stops; Use Train Limits instead.
 
-Signal Controlled Trains (SCT) is based on the premise that trains already have cargo and just need to be routed to the correct stop. SCT does not control the full train schedule; it only inserts a new station (+ a temporary stop), when an order is made, and removes it once done. By default, SCT will copy the conditions of the station currently in the insertion position use it for the inserted station as well. The insertion position can be altered using signals.
+Signal Controlled Trains (SCT) is based on the premise that trains already have cargo and just need to be routed to the correct stop. SCT does not control the full train schedule; it only inserts a new station (+ a temporary stop), when an order is made, and removes it once done. By default, SCT will copy the conditions of the station currently in the insertion position and use it for the newly-inserted station as well. The insertion position can be altered using signals.
  
 There are three types of routing the mod can perform: First is a delivery, where trains have cargo, and are routed to a stop with the skip signal receiving negative signals for that cargo. Second is a pickup, where are trains are given an 'imaginary' cargo, and seek out station receiving the depot signal together with positive signals for that cargo. (I would have called it virtual cargo, but a friend insisted for the sake of a math joke that trains can deliver Complex cargo loads, and internally this is essentially a delivery with the signs flipped.) Last is a refuelling operation, which can be used in place of Train Control Signal's refuel stops if desired. 
 
@@ -63,6 +63,6 @@ In addition, any train attempting to path to a station with the *Dot Signal in i
 Networks are denoted as bitmasks, using the signal value. In other words, the bitwise AND of the two signals must not be equal to 0. This is similar to LTN, Project Cybersyn, and Rail Logistics Dispatcher. 
 
 Trains and Stations can have 3 types of networks each: 
-+ Trains that need refueling get a refuel network, and will seek out refuel stations in the same network. Both are identified by the *REFUEL Signal* -Refuel: Refuel signal-> Refuel signal
-+ Trains attempting to *deliver* will use the value of the *DEPOT signal* to seek out a Requester/Demand station in the same network, which is determined by the value of the *SKIP signal*. -Delivery: Depot signal -> Skip signal
-+ Trains attempting to *pickup* will use the value of the *INFO signal* to seek out a Provider/Supply station in the same network, denoted by the *DEPOT signal* -Pickup: Info signal -> Depot signal
++ -Refuel: Trains with Refuel signal -> Stations with Refuel signal. Trains that need refueling get a refuel network, and will seek out refuel stations in the same network. Both are identified by the *REFUEL Signal* 
++ -Delivery: Trains with Depot signal -> Stations with Skip signal. Trains attempting to *deliver* will use the value of the *DEPOT signal* to seek out a Requester/Demand station in the same network, which is determined by the value of the *SKIP signal*. 
++ -Pickup: Trains with Info signal -> Stations with Depot signal. Trains attempting to *pickup* will use the value of the *INFO signal* to seek out a Provider/Supply station in the same network, denoted by the *DEPOT signal* 

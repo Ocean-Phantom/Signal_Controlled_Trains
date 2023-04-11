@@ -2,19 +2,21 @@ local for_n_of = require('__flib__.table').for_n_of
 
 local function poll_train_stop(Stop, ID)
     local T_Stop = Stop.Train_Stop
-    local s_index = T_Stop.surface_index
     -- remove stops if invalid
     if T_Stop.valid == false then
-        local v = global.Surfaces[s_index]
-        if v.Train_Stops[ID] then
-            v.Train_Stops[ID] = nil
-            v.Demand_Stops[ID] = nil
-            v.Supply_Stops[ID] = nil
-            v.Refuel_Stops[ID] = nil
+        for k,v in pairs(global.Surfaces) do
+            if v.Train_Stops[ID] then
+                v.Train_Stops[ID] = nil
+                v.Demand_Stops[ID] = nil
+                v.Supply_Stops[ID] = nil
+                v.Refuel_Stops[ID] = nil
+            end
+            global.Train_Stops[ID] = nil
         end
-        global.Train_Stops[ID] = nil
+
     -- cache stops that based on whether the depot or skip signals are found
     else
+        local s_index = T_Stop.surface_index
         --remove stops from cache
         for signal in pairs(Stop.Signals.Item_Signals) do
             global.Surfaces[s_index].Supply_Stops_by_Signal.item[signal][ID] = nil
@@ -59,8 +61,6 @@ local function poll_train_stop(Stop, ID)
         else
             global.Surfaces[s_index].Demand_Stops[ID] = nil
         end
-
-        
     end
     return nil,false,false
 end
