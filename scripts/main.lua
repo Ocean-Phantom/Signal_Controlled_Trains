@@ -106,6 +106,37 @@ local function on_setting_changed(event)
 		Train_Stops_per_poll = settings.global.SCT_Train_Stops_per_poll.value
 	}
 
+	for _, Delivery in pairs(global.Deliveries) do
+		if Delivery and (game.tick - Delivery.Tick_Started) >= global.Settings.delivery_timeout_ticks then
+			if Delivery.On_Way == true then
+				local type = nil
+				if Delivery.Type == 1 then
+					type = "delivery"
+				elseif Delivery.Type == 2 then
+					type = "pickup"
+				elseif Delivery.Type == 3 then
+					type = "refueling attempt"
+				end
+				local loco_id = 0
+				if global.Trains[Delivery.Train_ID] and global.Trains[Delivery.Train_ID].Train.valid == true then
+					local locomotives = global.Trains[Delivery.Train_ID].Train.locomotives
+					if next(locomotives) and next(locomotives.front_movers) then
+						loco_id = locomotives.front_movers[1].unit_number
+					elseif next(locomotives) and next(locomotives.back_movers) then
+						loco_id = locomotives.back_movers[1].unit_number
+					end
+				end
+
+				game.print({"mod-messages.SCT_Delivery_Timeout_Message", type, loco_id, Delivery.Destination_Train_Stop_ID})
+				if global.Trains[Delivery.Train_ID].Train.valid == true then
+					deactivate_delivery(Delivery.Delivery_ID)
+					reset_delivery_flags(Delivery.Train_ID)
+					reset_pickup_flags(Delivery.Train_ID)
+					reset_refuel_flags(Delivery.Train_ID)
+				end
+			end
+		end
+	end
 	--ensure delivery can't be removed before it times out
 	if settings.global.SCT_delivery_timeout_time.value >= settings.global.SCT_delivery_removal_time.value then
 		local new_setting = settings.global.SCT_delivery_removal_time
@@ -122,7 +153,7 @@ local function on_surface_deleted(event)
 end
 
 script.on_init(setup_globals)
-script.on_configuration_changed(setup_globals)
+script.on_configuration_changed(on_configuration_changed)
 -- script.on_load(function()
 -- end)
 

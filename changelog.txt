@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2023.04.12
+  Changes:
+    - Changed how caching train stops works; instead of removing a train stop from the cached table each time it's polled, it is instead removed when trains check signal while attempting deliveries
+  Bugfixes:
+    - Fixed an error in poll_deliveries
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 2023.04.11
   Bugfixes:

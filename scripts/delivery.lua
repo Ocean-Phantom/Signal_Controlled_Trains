@@ -16,16 +16,24 @@ local function standard_delivery(same_net, train)
 			local signal = train_stop.Signals.Fluid_Signals[fluid_cargo]
 			if signal then
 				local test = signal.amount
+				if test >= 0 then
+					local s_index = train.Train.front_stock.surface_index
+					global.Surfaces[s_index].Demand_Stops_by_Signal.fluid[fluid_cargo][train_stop.ID] = nil
+					goto SKIP
+				end
 				if train_stop.Cargo_In_Transit.Fluid_Cargo[fluid_cargo] then
 					test = signal.amount + train_stop.Cargo_In_Transit.Fluid_Cargo[fluid_cargo]
 				end
+
 				if test < 0 and math.abs(test) >= v then
 					num_matches = num_matches + 1
-					
 				elseif train.Exclusive_Delivery_Mode == true then
 					--skip checking more
 					goto SKIP
 				end
+			else -- signal not found
+				local s_index = train.Train.front_stock.surface_index
+				global.Surfaces[s_index].Demand_Stops_by_Signal.fluid[fluid_cargo][train_stop.ID] = nil
 			end
 		end
 
@@ -33,15 +41,24 @@ local function standard_delivery(same_net, train)
 			local signal = train_stop.Signals.Item_Signals[cargo]
 			if signal then
 				local test = signal.amount
+				if test >= 0 then
+					local s_index = train.Train.front_stock.surface_index
+					global.Surfaces[s_index].Demand_Stops_by_Signal.item[cargo][train_stop.ID] = nil
+					goto SKIP
+				end
 				if train_stop.Cargo_In_Transit.Cargo[cargo] then
 					test = signal.amount + train_stop.Cargo_In_Transit.Cargo[cargo]
 				end
+
 				if test < 0 and math.abs(test) >= v then
 					num_matches = num_matches + 1
 				elseif train.Exclusive_Delivery_Mode == true then
 					--skip checking more
 					goto SKIP
 				end
+			else -- signal not found
+				local s_index = train.Train.front_stock.surface_index
+				global.Surfaces[s_index].Demand_Stops_by_Signal.item[cargo][train_stop.ID] = nil
 			end
 		end
 		::SKIP::
@@ -95,16 +112,25 @@ local function pickup(same_net, train)
 			local signal = train_stop.Signals.Fluid_Signals[fluid_cargo]
 			if signal then
 				local test = signal.amount
+				if test <= 0 then
+					local s_index = train.Train.front_stock.surface_index
+					global.Surfaces[s_index].Supply_Stops_by_Signal.fluid[fluid_cargo][train_stop.ID] = nil
+					goto SKIP
+				end
 				if train_stop.Imaginary_Cargo_In_Transit.Fluid_Cargo[fluid_cargo] then
 					test = signal.amount + train_stop.Imaginary_Cargo_In_Transit.Fluid_Cargo[fluid_cargo]
 				end
-				if test >= 0 and test >= math.abs(v) then
+
+				if test > 0 and test >= math.abs(v) then
 					num_matches = num_matches + 1
 					imaginary_cargo_per_stop[train_stop.ID].Fluid_Cargo[fluid_cargo] = -1
 				elseif train.Exclusive_Delivery_Mode == true then
 					--skip checking more
 					goto SKIP
 				end
+			else -- signal not found
+				local s_index = train.Train.front_stock.surface_index
+				global.Surfaces[s_index].Supply_Stops_by_Signal.fluid[fluid_cargo][train_stop.ID] = nil
 			end
 		end
 
@@ -112,16 +138,25 @@ local function pickup(same_net, train)
 			local signal = train_stop.Signals.Item_Signals[cargo]
 			if signal then
 				local test = signal.amount
+				if test <= 0 then
+					local s_index = train.Train.front_stock.surface_index
+					global.Surfaces[s_index].Supply_Stops_by_Signal.item[cargo][train_stop.ID] = nil
+					goto SKIP
+				end
 				if train_stop.Imaginary_Cargo_In_Transit.Cargo[cargo] then
 					test = signal.amount + train_stop.Imaginary_Cargo_In_Transit.Cargo[cargo]
 				end
-				if test >= 0 and test >= math.abs(v) then
+
+				if test > 0 and test >= math.abs(v) then
 					num_matches = num_matches + 1
 					imaginary_cargo_per_stop[train_stop.ID].Cargo[cargo] = -1
 				elseif train.Exclusive_Delivery_Mode == true then
 					--skip checking more
 					goto SKIP
 				end
+			else -- signal not found
+				local s_index = train.Train.front_stock.surface_index
+				global.Surfaces[s_index].Supply_Stops_by_Signal.item[cargo][train_stop.ID] = nil
 			end
 		end
 		::SKIP::

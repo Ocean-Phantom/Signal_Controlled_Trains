@@ -18,14 +18,14 @@ local function poll_train_stop(Stop, ID)
     else
         local s_index = T_Stop.surface_index
         --remove stops from cache
-        for signal in pairs(Stop.Signals.Item_Signals) do
-            global.Surfaces[s_index].Supply_Stops_by_Signal.item[signal][ID] = nil
-            global.Surfaces[s_index].Demand_Stops_by_Signal.item[signal][ID] = nil
-        end
-        for signal in pairs(Stop.Signals.Fluid_Signals) do
-            global.Surfaces[s_index].Supply_Stops_by_Signal.fluid[signal][ID] = nil
-            global.Surfaces[s_index].Demand_Stops_by_Signal.fluid[signal][ID] = nil
-        end
+        -- for signal in pairs(Stop.Signals.Item_Signals) do
+        --     global.Surfaces[s_index].Supply_Stops_by_Signal.item[signal][ID] = nil
+        --     global.Surfaces[s_index].Demand_Stops_by_Signal.item[signal][ID] = nil
+        -- end
+        -- for signal in pairs(Stop.Signals.Fluid_Signals) do
+        --     global.Surfaces[s_index].Supply_Stops_by_Signal.fluid[signal][ID] = nil
+        --     global.Surfaces[s_index].Demand_Stops_by_Signal.fluid[signal][ID] = nil
+        -- end
 
         update_train_stop_signals(ID, T_Stop)
         if Stop.Network_Supply ~= 0 then
@@ -175,7 +175,7 @@ function poll_deliveries()
     if index < 0 then return end --no idea how uint - int will come out, so this is just insurance.
 
     local Delivery = global.Deliveries[index]
-    if Delivery and Delivery.Tick_Started >= global.Settings.delivery_timeout_ticks then
+    if Delivery and (game.tick - Delivery.Tick_Started) >= global.Settings.delivery_timeout_ticks then
         if Delivery.On_Way == true then
             local type = nil
             if Delivery.Type == 1 then
