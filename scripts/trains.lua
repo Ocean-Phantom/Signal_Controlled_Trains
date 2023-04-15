@@ -336,20 +336,20 @@ function on_train_depart(event)
         local depot_signal = last_stop_signals.Virtual_Signals[DEPOT_SIGNAL]
         if depot_signal ~= nil then
             train.Registered_For_Delivery = true
-            train.Network_Supply = depot_signal.amount
+            train.Network_Supply = depot_signal
         end
 
         local refuel = last_stop_signals.Virtual_Signals[FUEL_SIGNAL]
         if refuel ~= nil then
             if needs_refueling(train_id) then
                 train.Registered_For_Refueling = true
-                train.Network_Refuel = refuel.amount
+                train.Network_Refuel = refuel
             end
         end
 
         local dot = last_stop_signals.Virtual_Signals[DOT_SIGNAL]
         if dot ~= nil then -- if it has the dot override, insert there, otherwise just do current position
-            train.Intended_Insert_Position = math.abs(dot.amount)
+            train.Intended_Insert_Position = math.abs(dot)
         else
             train.Intended_Insert_Position = train.Train.schedule.current
         end
@@ -363,15 +363,15 @@ function on_train_depart(event)
         if info ~= nil then
             if train.Cargo_Capacity["item"] > 0 then
                 for item_signal, s in pairs(last_stop_signals.Item_Signals) do
-                    if s.amount < 0 then
-                        train.Imaginary_Cargo[item_signal] = s.amount
+                    if s < 0 then
+                        train.Imaginary_Cargo[item_signal] = s
                     end
                 end
             end
             if train.Cargo_Capacity["fluid"] > 0 then
                 for fluid_signal, s in pairs(last_stop_signals.Fluid_Signals) do
-                    if s.amount < 0 then
-                        train.Imaginary_Fluid_Cargo[fluid_signal] = s.amount
+                    if s < 0 then
+                        train.Imaginary_Fluid_Cargo[fluid_signal] = s
                     end
                 end
             end
@@ -387,7 +387,7 @@ function on_train_depart(event)
             --         train.Exclusive_Delivery_Mode = false
             --     end
             -- end
-            train.Network_Pickup = info.amount
+            train.Network_Pickup = info
             train.Registered_For_Pickup = true
             
         end

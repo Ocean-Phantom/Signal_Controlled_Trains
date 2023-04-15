@@ -1,6 +1,6 @@
 require("scripts.constants")
 require("scripts.delivery")
--- require("scripts.migrations")
+require("scripts.migrations")
 require("scripts.poll")
 require("scripts.stations")
 require("scripts.surfaces")

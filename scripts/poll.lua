@@ -17,27 +17,17 @@ local function poll_train_stop(Stop, ID)
     -- cache stops that based on whether the depot or skip signals are found
     else
         local s_index = T_Stop.surface_index
-        --remove stops from cache
-        -- for signal in pairs(Stop.Signals.Item_Signals) do
-        --     global.Surfaces[s_index].Supply_Stops_by_Signal.item[signal][ID] = nil
-        --     global.Surfaces[s_index].Demand_Stops_by_Signal.item[signal][ID] = nil
-        -- end
-        -- for signal in pairs(Stop.Signals.Fluid_Signals) do
-        --     global.Surfaces[s_index].Supply_Stops_by_Signal.fluid[signal][ID] = nil
-        --     global.Surfaces[s_index].Demand_Stops_by_Signal.fluid[signal][ID] = nil
-        -- end
-
         update_train_stop_signals(ID, T_Stop)
         if Stop.Network_Supply ~= 0 then
             global.Surfaces[s_index].Supply_Stops[ID] = T_Stop
             -- add stops to cache
             for signal, v in pairs(Stop.Signals.Item_Signals) do
-                if v.amount > 0 then
+                if v > 0 then
                     global.Surfaces[s_index].Supply_Stops_by_Signal.item[signal][ID] = true
                 end
             end
             for signal, v in pairs(Stop.Signals.Fluid_Signals) do
-                if v.amount > 0 then
+                if v > 0 then
                     global.Surfaces[s_index].Supply_Stops_by_Signal.fluid[signal][ID] = true
                 end
             end
@@ -49,12 +39,12 @@ local function poll_train_stop(Stop, ID)
             global.Surfaces[s_index].Demand_Stops[ID] = T_Stop
             -- add stops to cache
             for signal, v in pairs(Stop.Signals.Item_Signals) do
-                if v.amount < 0 then
+                if v < 0 then
                     global.Surfaces[s_index].Demand_Stops_by_Signal.item[signal][ID] = true
                 end
             end
             for signal, v in pairs(Stop.Signals.Fluid_Signals) do
-                if v.amount < 0 then
+                if v < 0 then
                     global.Surfaces[s_index].Demand_Stops_by_Signal.fluid[signal][ID] = true
                 end
             end
@@ -134,20 +124,20 @@ local function poll_train(Train, ID)
                     if info ~= nil then
                         if Train.Cargo_Capacity["item"] > 0 then
                             for item_signal, s in pairs(stop_signals.Item_Signals) do
-                                if s.amount < 0 then
-                                    Train.Imaginary_Cargo[item_signal] = s.amount
+                                if s < 0 then
+                                    Train.Imaginary_Cargo[item_signal] = s
                                 end
                             end
                         end
 
                         if Train.Cargo_Capacity["fluid"] > 0 then
                             for fluid_signal, s in pairs(stop_signals.Fluid_Signals) do
-                                if s.amount < 0 then
-                                    Train.Imaginary_Fluid_Cargo[fluid_signal] = s.amount
+                                if s < 0 then
+                                    Train.Imaginary_Fluid_Cargo[fluid_signal] = s
                                 end
                             end
                         end
-                        Train.Network_Pickup = info.amount
+                        Train.Network_Pickup = info
                     end
                 end
             end
