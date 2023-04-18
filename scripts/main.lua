@@ -146,7 +146,7 @@ local function on_setting_changed(event)
 end
 
 local function on_surface_created(event)
-	add_surface(event.surface)
+	add_surface(nil, event.surface_index)
 end
 local function on_surface_deleted(event)
 	delete_surface(event.surface_index)
